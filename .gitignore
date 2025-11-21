@@ -1,6 +1,7 @@
 # R / RStudio
 .Rhistory
 .RData
+.Rproj
 .Rproj.user/
 .Ruserdata
 .Rapp.history

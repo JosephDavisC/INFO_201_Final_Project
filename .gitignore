@@ -1,0 +1,30 @@
+# R / RStudio
+.Rhistory
+.RData
+.Rproj.user/
+.Ruserdata
+.Rapp.history
+
+# R Markdown caches
+_cache/
+*_cache/
+*.utf8.md
+*.knit.md
+
+# Knitted intermediates
+*.html
+!index.html 
+*.pdf
+
+# Mac / system files
+.DS_Store
+Thumbs.db
+
+# Logs / temp
+*.log
+*.tmp
+
+# GitHub-specific
+*.swp
+*.swo
+

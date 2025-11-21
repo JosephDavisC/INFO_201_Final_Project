@@ -1,0 +1,29 @@
+---
+title: "project-group-2"
+output: html_document
+---
+
+```{r}
+library("tidyverse")
+```
+---
+
+```{r}
+job_salaries <- read_delim("Data/job-salaries.csv", delim = ",")
+llm_data <- read_delim("Data/large-language-models.csv", delim = ",")
+```
+---
+
+```{r}
+head(job_salaries)
+str(job_salaries)
+summary(job_salaries)
+```
+---
+
+```{r}
+head(llm_data)
+str(llm_data)
+summary(llm_data)
+```
+

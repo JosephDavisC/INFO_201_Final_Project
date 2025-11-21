@@ -5,7 +5,7 @@ Group Members:
 
 Joseph Davis Chamdani
 
-Winsen Teh
+Winson Teh
 
 Kenneth Wu
 
@@ -13,16 +13,6 @@ Hanjun Ma
 
 PROJECT OVERVIEW
 This project investigates how the rapid growth of Large Language Models (LLMs) from 2018–2024 relates to the demand and salaries of AI‑related jobs from 2020–2025. We analyze job postings, salary trends, and hiring patterns during the AI boom and compare them to the timeline of major LLM releases.
-
-We explore:
-
-Whether increases in LLM releases correlate with job demand
-
-Whether ChatGPT’s release in November 2022 led to increases in AI job salaries
-
-Which AI job roles (ML Engineer, Data Scientist, AI Engineer) offer the highest compensation
-
-How company size and experience level influence salaries during the LLM surge
 
 DATASETS USED
 

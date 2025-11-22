@@ -114,6 +114,30 @@ llm_filtered %>%
   labs(x = "Year", y = "Number of LLM Releases")
 ```
 
+## **Top LLM Companies by Number of Model Releases**
+
+
+```{r}
+llm_filtered %>%
+  group_by(Comapany) %>%             # if the column is spelled Comapany, change here
+  summarize(n_models = n()) %>%
+  arrange(desc(n_models)) %>%
+  slice_head(n = 10)
+```
+
+```{r}
+llm_filtered %>%
+  group_by(Comapany) %>%
+  summarize(n_models = n()) %>%
+  arrange(desc(n_models)) %>%
+  slice_head(n = 10) %>%
+  ggplot(aes(reorder(Comapany, n_models), n_models)) +
+  geom_col() +
+  coord_flip() +
+  labs(x = "Company", y = "Number of LLM Releases")
+```
+
+  
 ---
 
 ### **Average AI Job Salaries**
@@ -166,3 +190,178 @@ job_filtered %>%
 ```
 
 ---
+
+# **Research Questions**
+
+## **1. How does the growth in LLM model releases from 2020 to 2024 correlate with the number of AI-related job postings during the same period?**
+
+### **1.1 Summarizing AI Job Demand and LLM Releases**
+
+```{r}
+rq1_summary <- job_filtered %>%
+  filter(work_year <= 2024) %>% 
+group_by(work_year) %>%
+  summarize(n_jobs = n()) %>%
+  left_join(
+    llm_filtered %>%
+      group_by(year) %>%
+      summarize(n_llms = n()),
+    by = c("work_year" = "year")
+  )
+
+rq1_summary
+```
+
+### **1.2 Plotting Jobs vs LLM Releases (Side-by-Side Trends)**
+ 
+#### **1.2.1 AI job postings by year**
+```{r}
+rq1_summary %>%
+ggplot(aes(work_year, n_jobs)) +
+geom_line() +
+geom_point() +
+labs(
+x = "Year",
+y = "Number of AI job postings",
+title = "AI job postings from 2020 to 2024"
+)
+```
+
+#### **1.2.2 LLM releases by year**
+```{r}
+rq1_summary %>%
+ggplot(aes(work_year, n_llms)) +
+geom_line() +
+geom_point() +
+labs(
+x = "Year",
+y = "Number of LLM releases",
+title = "LLM model releases from 2020 to 2024"
+)
+```
+---
+
+### **1.3 AI Job Demand and LLM Releases (Combined Summary and Plots)**
+
+```{r}
+rq1_long <- rq1_summary %>%
+  filter(work_year <= 2024) %>%
+  transmute(
+    work_year,
+    `AI job postings` = n_jobs,
+    `LLM releases × 500` = n_llms * 500   
+  ) %>%
+  pivot_longer(
+    cols = c(`AI job postings`, `LLM releases × 500`),
+    names_to = "series",
+    values_to = "value"
+  )
+
+rq1_long %>%
+  ggplot(aes(x = work_year, y = value, color = series)) +
+  geom_line() +
+  geom_point() +
+  scale_color_manual(
+    name = "Series",
+    values = c(
+      "AI job postings" = "blue",
+      "LLM releases × 500" = "red"
+    )
+  ) +
+  labs(
+    x = "Year",
+    y = "Jobs and scaled LLM releases",
+    title = "AI Job Postings vs LLM Model Releases (2020–2024)"
+  ) +
+  theme(legend.position = "right")
+```
+
+
+
+### **1.4 Conclusion **
+From 2020 to 2024, both LLM model releases and AI job postings increased sharply, but at different intensities and at slightly different times. LLM releases grew steadily from 2020 to 2022, peaked in 2023, then declined in 2024. AI job postings, on the other hand, rose slowly until 2022, then accelerated dramatically in 2023 and 2024.
+
+The timing shows that large increases in LLM development are followed by large increases in AI job demand. The biggest jump in LLM releases occurred in 2023, and the biggest jump in AI job postings occurred right after, between 2023 and 2024.
+
+Overall, the two graphs suggest a positive relationship. Faster LLM development is consistently followed by higher hiring demand in AI fields, showing that industry growth in model releases aligns with rising need for AI talent.
+
+---
+
+## **2. Are bigger AI models (more parameters) associated with more LLM releases in certain companies?**
+
+### **2.1 Cleaning the Parameters Column**
+
+```{r}
+llm_clean <- llm_filtered %>%
+  mutate(
+    Parameters_clean = case_when(
+      str_detect(Parameters, "B") ~ as.numeric(str_replace(Parameters, "B", "")) * 1e9,
+      str_detect(Parameters, "M") ~ as.numeric(str_replace(Parameters, "M", "")) * 1e6,
+      TRUE ~ as.numeric(Parameters)
+    )
+  )
+```
+
+### **2.2 Counting LLM releases and average model size per company**
+
+```{r}
+company_counts <- llm_clean %>%
+  group_by(Comapany) %>%
+  summarize(
+    n_models = n(),
+    avg_params = mean(Parameters_clean, na.rm = TRUE)
+  ) %>%
+  arrange(desc(n_models))
+
+company_counts
+```
+
+### **2.3 Top 10 companies by number of LLM releases**
+
+```{r}
+llm_clean %>%
+  group_by(Comapany) %>%
+  summarize(
+    n_models = n()
+  ) %>%
+  arrange(desc(n_models)) %>%
+  slice_head(n = 10) %>%
+  ggplot(aes(x = reorder(Comapany, n_models), y = n_models)) +
+  geom_col() +
+  coord_flip() +
+  labs(
+    x = "Company",
+    y = "Number of LLM releases",
+    title = "Top 10 companies by number of LLM releases"
+  )
+```
+
+---
+
+### **2.4 Top 10 companies by average model size (parameters)**
+
+```{r}
+llm_clean %>%
+  group_by(Comapany) %>%
+  summarize(
+    avg_params = mean(Parameters_clean, na.rm = TRUE)
+  ) %>%
+  arrange(desc(avg_params)) %>%
+  slice_head(n = 10) %>%
+  ggplot(aes(x = reorder(Comapany, avg_params), y = avg_params)) +
+  geom_col() +
+  coord_flip() +
+  labs(
+    x = "Company",
+    y = "Average model size (parameters)",
+    title = "Top 10 companies by average LLM size"
+  )
+```
+
+---
+
+### **2.5 Conclusion**
+
+Companies that build the largest AI models are not the same companies that release the most models. High-capacity models come mainly from groups like SambaNova and Inflection AI, while high-volume releases come from companies such as Google and Meta. This shows that model size and release activity follow different strategies rather than being directly related.
+
+

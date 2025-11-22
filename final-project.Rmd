@@ -1,7 +1,5 @@
 ---
-title: "INFO 201 Final Project Group 2"
-author: "Joseph Chamdani, Winson Teh, Kenneth Wu, Hanjun Ma"
-date: "2025-11-21"
+title: "final-project"
 output: html_document
 ---
 
@@ -17,7 +15,6 @@ library("tidyverse")
 job_salaries <- read_delim("Data/job-salaries.csv", delim = ",")
 llm_data <- read_delim("Data/large-language-models.csv", delim = ",")
 ```
-
 ---
 
 ## **Inspecting Dimensions and Variables**
@@ -26,7 +23,6 @@ llm_data <- read_delim("Data/large-language-models.csv", delim = ",")
 dim(job_salaries)
 dim(llm_data)
 ```
-
 ---
 
 ```{r}
@@ -39,16 +35,12 @@ job_salaries %>% sample_n(5)
 llm_data %>% sample_n(5)
 ```
 
----
-
 ## **Cleaning Year Columns**
 
 ```{r}
 job_salaries <- job_salaries %>%
   mutate(work_year = as.numeric(work_year))
 ```
-
----
 
 ```{r}
 llm_data <- llm_data %>%
@@ -57,8 +49,6 @@ llm_data <- llm_data %>%
     year = as.numeric(paste0("20", yy))
   )
 ```
-
----
 
 ## **Checking Year Ranges**
 
@@ -76,8 +66,6 @@ llm_data %>%
     missing_year = sum(is.na(year))
   )
 ```
-
----
 
 ## **Filtering the Data**
 
@@ -98,10 +86,7 @@ llm_filtered %>% count(year)
 ```
 
 ---
-
 ## **Results** 
-
----
 
 ### **LLM Releases by Year**
 
@@ -165,4 +150,3 @@ job_filtered %>%
   )
 ```
 
----

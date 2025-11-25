@@ -1,10 +1,10 @@
 # **INFO 201 Final Project – Group 2**
 
 **Team Members:**
-• Joseph Chamdani
-• Winson Teh
-• Kenneth Wu
-• Hanjun Ma
+• [Joseph Chamdani](https://github.com/joechamdani)
+• [Winson Teh](https://github.com/win719)
+• [Kenneth Wu](https://github.com/kennethwu30)
+• [Hanjun Ma](https://github.com/decade3601)
 
 ---
 

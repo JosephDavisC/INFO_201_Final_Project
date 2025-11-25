@@ -1,0 +1,322 @@
+---
+title: "INFO 201 Final Project Group 2"
+author: "Joseph Chamdani, Winson Teh, Kenneth Wu, Hanjun Ma"
+date: "2025-11-21"
+output: html_document
+---
+
+---
+
+## **1. Abstract**
+
+---
+
+This project examines how the rapid growth of large language models from 2018 to 2024 relates to trends in AI job demand and salaries from 2020 to 2025. Using two Kaggle datasets, AI Job Salaries and LLM Releases, we explore whether major AI breakthroughs, including the launch of ChatGPT in 2022, correlate with changes in hiring, pay, and role distribution in the AI workforce. We clean, transform, and visualize the datasets to investigate patterns in job titles, salary growth, experience levels, and company size. Our goal is to help students, advisors, and early career job seekers understand which AI related roles are growing the fastest and which	skills appear most valuable in the current job market.
+
+---
+
+## **2. Introduction**
+
+---
+
+Artificial intelligence has expanded rapidly in recent years, especially with the introduction of modern large language models such as GPT 3, GPT 4, Claude, LLaMA, and Gemini. As these models grew in capability and popularity, many industries increased their use of AI tools. This change may have affected the overall demand for AI related jobs, as well as the salary levels for roles such as Machine Learning Engineer, AI Engineer, Data Scientist, and Data Analyst. However, it is still unclear how strongly these model releases relate to trends in hiring and compensation.
+
+This project examines two datasets that capture these developments. The first dataset documents global AI job postings and salaries from 2020 to 2025. The second dataset tracks large language model releases by year, company, and scale from 2018 to 2024. By comparing these datasets, we investigate patterns that may connect AI innovation with job market outcomes.
+This study focuses on four research questions : 
+
+1. How does the growth in LLM releases from 2020 to 2024 correlate with the number of AI related job postings during the same period?
+2. Did the release of ChatGPT in November 2022 create a noticeable spike in AI related job demand and salaries?	
+3. Which specific AI job titles have the highest average salaries from 2020 to 2025?
+4. How do experience level and company size affect AI job salaries?
+
+---
+
+## **3. Data Source**
+
+---
+
+**1. Salaries for Data Science Jobs (2020 - 2025)**
+
+**Source** : https://www.kaggle.com/datasets/adilshamim8/salaries-for-data-science-jobs
+
+**Description** : This dataset contains real-world salary information for jobs in data science, artificial intelligence and machine learning covering the years 2020 to 2025. Each record corresponds to a specific job posting and includes the year worked, the employee’s experience level, the employment type, the job role, the company size and location, and the salary paid in US dollars.
+
+**Usage permissions**: Publicly available on Kaggle for research and educational use (subject to the dataset’s terms).
+
+**Relevance** : This dataset is well suited to analyzing trends in the AI job market over time. Because it covers both the supply side (job roles and titles) and compensation (salary), it allows investigation of which AI-related roles are growing in number, how pay levels are changing year-to-year, and how factors such as experience level or company size affect salary outcomes. These aspects align closely with the research questions in this study, which explore how large language model releases may correlate with job demand and pay in the AI field.
+
+---
+
+**2. LLM’s Data (2018 - 2024)**
+
+**Source**: https://www.kaggle.com/datasets/jainaru/llms-data-2018-2024
+
+**Description** : This dataset documents large language model (LLM) releases from 2018 to 2024. Each entry corresponds to a specific model release event and includes details such as the model name, release date, parameters, organization, and model type. The dataset allows tracking of the evolution of LLMs over time.
+
+**Usage permissions** :  Publicly available on Kaggle for research and educational use (subject to the dataset’s terms).
+
+**Relevance** : This dataset is ideal for analyzing the pace and scale of LLM innovation and how that might influence related job market trends. By linking model release timelines with AI job posting and salary data, we can evaluate whether increased AI model activity corresponds to surges in hiring or compensation. This aligns directly with the research questions concerning the relationship between AI technological advancements and workforce outcomes.
+
+---
+
+## **4. Data**
+
+---
+
+#### **Salaries Data**
+
+**Rows** : 151,445
+
+**Columns** : 11
+
+**Each row represents** : A single AI or data related job posting from 2020 to 2025, including information on job title, salary, experience level, employment type, and company charateristics. 
+
+**Relevant variables** : 
+
+**- work_year** : The calendar year in which the salary was paid. Stored as a numeric variable. Used for grouping by year in the analysis.
+
+**- job_title**: A text variable describing the job name. This was cleaned and standardized into broader categories such as Data Scientist, Machine Learning Engineer, AI Engineer, and Data Analyst for cross dataset consistency.
+
+**- salary_in_usd**: A numeric variable representing the salary converted to United States dollars. Used as the primary measurement for comparing income across roles and years.
+
+---
+
+#### **LLM’s Data **
+
+**Rows**: 342
+
+**Columns**: 11
+
+**Each row represents**: A single large language model released or updated in 2024, including details such as model name, developer, model type, training data size, and performance information.
+
+**Relevant variables and how they’re coded**: 
+
+**- Model**: Text label for the specific LLM.
+
+**- Company**: Categorical variable identifying the developer (e.g., Google DeepMind, Meta, Microsoft).
+
+**- Release Date**: Originally stored as text; converted into a Date object to enable time-based grouping by month and quarter.
+
+---
+
+## **5. Method**
+
+---
+
+### **5.1 Data Cleaning**
+
+---
+
+#### **AI Job Salaries dataset**
+
+• Converted `work_year` to numeric to allow year based filtering.
+
+• Standardized job titles by converting text to lowercase and detecting keywords. Titles were grouped into four canonical roles: Machine Learning Engineer, AI Engineer, Data Scientist, and Data Analyst.
+
+• Checked for missing values in salary and year, removing rows with missing or invalid entries.
+
+---
+
+#### **LLM Releases dataset**
+
+• Cleaned the `Release Date` variable, which was originally stored as text, by extracting the two digit year and converting it to a numeric year variable.
+
+• Removed LLM entries without a valid release year.
+
+• Cleaned the `Parameters` variable by removing non numeric characters and converting model sizes into a numeric variable Parameters_num.
+
+• Renamed variables to remove spaces (for example, converting `Training dataset` to `Training_dataset`).
+
+---
+
+### **5.2 Merging and Filtering**
+To answer the research questions, different filtering and preparation steps were applied to each dataset:
+
+---
+
+#### **RQ1: How does the growth in LLM releases from 2020 to 2024 correlate with the number of AI related job postings during the same period?**
+
+• Filtered `job_salaries` to include only years 2020 to 2024.
+
+• Filtered `llm_data` to include only years 2020 to 2024.
+
+• Computed yearly counts of AI job postings and LLM releases.
+
+• Performed a left join on `work_year` and year to create a single summary table for time series comparison.
+
+---
+
+#### **RQ2: Did the release of ChatGPT in November 2022 create a noticeable spike in AI related job demand and salaries?	**
+
+• Cleaned Parameters into a numeric variable `Parameters_num`.
+
+• Removed all rows where model size was missing.
+
+• Computed average model size and number of releases per company.
+
+• Sorted companies by largest average model size and by most total releases.
+
+• Prepared two separate tables used for side by side comparison.
+
+---
+
+#### **RQ3: Which specific AI job titles have the highest average salaries from 2020 to 2025?**
+
+• Standardized job titles by detecting keywords (“machine learning”, “ai engineer”, “data scientist”, “data analyst”).
+
+• Filtered only those titles to form consistent role categories.
+
+• Grouped by year and job title, calculating average salary from 2020 to 2025.
+
+• Prepared a clean summary table used to generate the multi line salary trend plot.
+
+---
+
+#### **RQ4: Which countries pay the highest AI salaries, and how do the top countries compare when controlling for the same job role?**
+
+• Calculated overall average salaries by country and selected the top ten highest paying countries.
+
+• Filtered the dataset to include only Data Scientist roles within these top ten countries.
+
+• Computed average salary per country.
+
+• Prepared the final comparison table used to generate the ranked bar chart.
+
+---
+
+## **6. Results**
+
+---
+
+### **6.1 RQ1 — AI Job Postings vs LLM Releases (2020–2024)**
+
+![](Graphs/RQ1.png){width=50%}
+
+The summary table shows that both AI job postings and LLM releases increased significantly from 2020 to 2024.
+
+The combined trend plot demonstrates that:
+
+• LLM releases began rising sharply between 2021 and 2023
+
+• AI job postings rose sharply between 2022 and 2024
+
+• The largest increase in job demand occurred shortly after major LLM release growth
+
+This suggests a strong association between LLM development activity and rising AI job opportunities.
+
+**Conclusion:**
+
+From 2020 to 2024, both AI job postings and LLM releases increased rapidly. Job postings rose from 75 in 2020 to over 62,000 in 2024, while LLM releases grew from 3 to nearly 100 during the same period. The steep jump in job postings after 2022 aligns closely with the surge in model releases, suggesting that growth in LLM development is strongly associated with rising demand for AI workers.
+
+
+---
+
+### **6.2 RQ2 — Largest Models vs Most Releases**
+![](Graphs/RQ2_LLM_Model.png){width=50%}
+![](Graphs/RQ2_LLM_Release.png){width=50%}
+
+
+Two comparisons were made:
+
+**Top 10 companies by average model size:**
+Meta AI ranks first by a wide margin, followed by SambaNova, Inflection AI, OpenAI, and SenseTime.
+
+**Top 10 companies by number of LLM releases:**
+Google leads in total releases, followed by Meta AI, Microsoft, Google DeepMind, and OpenAI.
+
+**Conclusion:**
+Companies releasing the biggest models are not the ones releasing the most models. Meta AI produces the largest models, but Google, Meta AI, and Microsoft dominate in release count. This indicates that producing bigger models does not necessarily correlate with releasing more models. Some companies prioritize size, while others prioritize volume.
+
+---
+
+### **6.3 RQ3 — AI Job Salaries by Role (2020–2025)**
+
+![](Graphs/RQ3.png){width=50%}
+
+The multi line plot shows clear salary trends for the four standardized AI job titles:
+
+• Machine Learning Engineer consistently earns the highest salary
+
+• AI Engineer follows closely starting in 2022
+
+• Data Scientist maintains strong but stable salaries
+
+• Data Analyst remains the lowest among the four roles
+
+All roles experienced significant growth after 2022, with Machine Learning Engineer salaries sharply increasing in 2023.
+
+**Conclusion: **
+From 2020 to 2025, Machine Learning Engineers earned the highest average salaries every year. AI Engineers ranked second, followed by Data Scientists and Data Analysts. The sharp increases starting in 2022 suggest that high demand for engineering focused roles corresponds with rising salary levels.
+
+---
+
+### **6.4 RQ4 — Country Differences in AI Salaries**
+
+![](Graphs/RQ4.png){width=50%}
+
+
+Using Data Scientists as the baseline role, the results show:
+
+• United States pays the highest average salaries
+
+• Mexico and Canada follow in second and third
+
+• Remaining countries show a noticeable drop compared to the top three
+
+The bar chart ranks countries clearly from highest to lowest pay.
+
+**Conclusion:**
+Across the top ten highest paying countries for Data Scientists, the United States consistently offers the highest salaries, with Mexico and Canada just behind. One possible explanation is that these three countries share strong cross-border technology integration, with many US-based AI companies operating or expanding into Canada and Mexico. This creates a closely connected regional market with high demand for AI talent, which helps keep salary levels elevated across all three countries.
+
+---
+
+## **7. Discussion**
+
+---
+
+**Collective Discussion**
+
+Our analysis reveals clear relationships between the rapid growth of large language models and trends in the AI job market. The sharp increase in LLM releases between 2021 and 2023 aligns closely with the surge in AI job postings between 2022 and 2024. This pattern suggests that advancements in AI technology, particularly the release of new foundation models, are associated with rising workforce demand. While we cannot claim direct causality, the timing strongly indicates that the expansion of model capabilities drives companies to hire more engineers, analysts, and researchers who can apply, integrate, or maintain these systems.
+
+Across companies, we found that the organizations releasing the largest models are not necessarily the ones releasing the most. Meta AI consistently produced the biggest models on average, while Google, Microsoft, and Meta led in total number of releases. This indicates that companies differ in strategic emphasis: some prioritize innovation through scale, while others prioritize iteration and volume. These differences reflect broader industry approaches to competitiveness in AI development.
+
+Salary trends further highlight how the job market responds to technical shifts. Machine Learning Engineers and AI Engineers consistently earned the highest salaries from 2020 to 2025, especially after 2022, when interest in large model deployment increased. Data Scientists and Data Analysts also experienced salary growth, but their increases were more moderate. This suggests that roles closest to model architecture, optimization, and application command the strongest compensation as organizations accelerate adoption of AI systems.
+
+Finally, our cross country analysis demonstrates that geographic factors strongly influence salary outcomes. Even when job titles are held constant, the United States maintains a significant salary advantage, followed by Mexico and Canada. This variation suggests that local economic conditions, labor markets, and industry presence shape compensation more heavily than job title alone.
+
+---
+
+**Limitations of the Data**
+
+Despite the meaningful patterns identified, several limitations must be acknowledged. First, our datasets cover different time spans. The LLM dataset includes releases from 2018 to 2024, while the job salary dataset spans 2020 to 2025. This overlap allows comparison, but not all events align perfectly in time, which limits long term causal interpretation.
+
+Second, our results rely on correlations rather than controlled causal analysis. Numerous external factors such as economic cycles, organizational hiring freezes, global events, and remote work trends may influence AI job postings and salaries. These broader forces were not fully captured in our datasets.
+
+Data quality also posed challenges. The LLM dataset contained non numeric “Parameters” values, requiring cleaning before analysis. Some model entries lacked parameter information entirely, which reduced the completeness of the size comparison. Likewise, job titles in the salary dataset were highly inconsistent, requiring extensive standardization before grouping roles reliably.
+
+Finally, aggregation steps such as averaging salaries by year, country, and job type may smooth out meaningful short term fluctuations. While this improves clarity, it may reduce nuance in the underlying data patterns.
+
+---
+
+**Further Research Directions**
+
+Future research could expand on our findings by incorporating additional external datasets, such as LinkedIn hiring trends, company financial reports, or global AI investment patterns. These could provide a clearer understanding of how economic conditions or venture capital flows influence job demand.
+
+A finer grained analysis of LLM impact would also be valuable. For example, comparing job market trends after the release of specific high impact models (such as GPT 3, GPT 4, Claude 3, or LLaMA) could reveal how individual breakthroughs affect hiring differently.
+
+Another useful direction would be exploring industry specific salary trends. While our study analyzed roles broadly, sectors such as healthcare, finance, and robotics may show unique patterns in how AI adoption influences workforce needs.
+
+Lastly, incorporating geographical economic indicators, such as cost of living, labor policies, and regional AI industry density, could further clarify why certain countries offer significantly higher or lower AI salaries, even for identical job roles.
+
+---
+
+## **8. Summary**
+
+---
+
+Overall, our findings highlight the strong connection between technological progress in AI and the evolving job market that surrounds it. The rapid rise of large language models from 2018 to 2024 parallels significant increases in AI job postings and compensation, especially after 2022. Roles involving model engineering and development consistently command the highest salaries, while geographic differences continue to shape global earning potential.
+
+Our analysis provides students, advisors, and early career professionals with a clearer understanding of which skills and roles are most valued in today’s AI driven economy. By recognizing how LLM innovation, company behavior, and geographic factors influence salary and hiring trends, individuals and organizations can better navigate the rapidly expanding AI workforce landscape.
+
+---
+

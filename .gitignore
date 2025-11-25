@@ -1,0 +1,28 @@
+# R history files
+.Rhistory
+.Rapp.history
+
+# RStudio session files
+.Rproj.user/
+.RData
+.Ruserdata
+
+# Knitted output
+*.html
+*.pdf
+*.docx
+
+# Cache folders for knitr
+_cache/
+*_cache/
+
+# Temporary files
+*.tmp
+*.log
+*.aux
+*.out
+
+# OS files
+.DS_Store
+
+

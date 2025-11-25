@@ -1,0 +1,422 @@
+---
+title: "INFO 201 Final Project Group 2 - Code"
+author: "Joseph Chamdani, Winson Teh, Kenneth Wu, Hanjun Ma"
+date: "2025-11-21"
+output: html_document
+---
+
+### **1. Setup and data loading**
+
+---
+
+```{r}
+library(tidyverse)
+
+job_salaries <- read_delim("Data/job-salaries.csv", delim = ",")
+llm_data_raw <- read_delim("Data/large-language-models.csv", delim = ",")
+
+dim(job_salaries)
+dim(llm_data_raw)
+
+names(job_salaries)
+names(llm_data_raw)
+```
+
+---
+
+### **2. Cleaning and Preprocessing**
+
+#### **2.1 Fix column names in LLM dataset**
+
+```{r}
+llm_data <- llm_data_raw %>%
+  rename(
+    Release_Date = `Release Date`,
+    Training_dataset = `Training dataset`,
+    Tokens = `Tokens `
+  )
+names(llm_data)
+```
+
+#### **2.2. Clean job salaries dataset**
+
+```{r}
+job_salaries <- job_salaries %>%
+  mutate(work_year = as.numeric(work_year)) %>%
+  filter(!is.na(work_year))
+
+job_salaries
+```
+
+#### **2.3 Clean LLM dataset (remove NA Release Dates, extract year)**
+
+```{r}
+llm_data <- llm_data %>%
+  filter(!is.na(Release_Date)) %>%
+  mutate(
+    yy   = substr(Release_Date, 1, 2),
+    year = suppressWarnings(as.numeric(paste0("20", yy)))
+  ) %>%
+  filter(!is.na(year)) %>%
+  rename(Company = Comapany)
+
+llm_data
+```
+#### **2.4 Convert Parameters column to numeric**
+
+```{r}
+llm_data <- llm_data %>%
+  mutate(
+    Parameters_clean = gsub("[^0-9\\.]", "", Parameters),
+    Parameters_num   = as.numeric(Parameters_clean)
+  )
+llm_data
+```
+
+#### **2.5 Standardize company names in LLM dataset**
+
+```{r}
+llm_data <- llm_data %>%
+  mutate(
+    Company = case_when(
+      Company %in% c("Google", "Google DeepMind", "DeepMind") ~ "Google",
+      TRUE ~ Company
+    )
+  )
+```
+
+
+---
+
+#### **2.6 Remaining NA counts**
+
+```{r}
+sum(is.na(llm_data$year))
+sum(is.na(job_salaries$work_year))
+sum(is.na(llm_data$Parameters_num))
+```
+
+#### **2.6 RQ1**
+To connect the growth of LLM releases with the AI job market, we combine the cleaned job salary data with the LLM data by calendar year. The result is a summary table that contains, for each year from 2020 to 2024, both the number of AI job postings and the number of LLM model releases. This merged table will be used to answer Research Question 1.
+
+```{r}
+rq1_summary <- job_salaries %>%
+  filter(work_year >= 2020, work_year <= 2024) %>%
+  group_by(work_year) %>%
+  summarize(n_jobs = n()) %>%
+  left_join(
+    llm_data %>%
+      filter(year >= 2020, year <= 2024) %>%
+      group_by(year) %>%
+      summarize(n_llms = n()),
+    by = c("work_year" = "year")
+  )
+
+rq1_summary
+```
+
+---
+
+### **3. Research Question 1** 
+**How does the growth in LLM model releases from 2020 to 2024 relate to the number of AI related job postings during the same period**
+
+#### **3.1 Summary table used for analysis**
+
+```{r}
+rq1_summary
+```
+
+---
+
+#### **3.2 Combined trend plot: AI job postings vs LLM releases**
+
+```{r}
+rq1_summary %>%
+  ggplot(aes(x = work_year)) +
+
+  geom_line(aes(y = n_jobs, col = "AI Job Postings"),
+            linewidth = 1.8) +
+  geom_point(aes(y = n_jobs, col = "AI Job Postings"),
+             size = 3) +
+
+  geom_line(aes(y = n_llms * 500, col = "LLM Releases"),
+            linewidth = 1.8) +
+  geom_point(aes(y = n_llms * 500, col = "LLM Releases"),
+             size = 3) +
+
+  scale_color_manual(
+    name = "Legend",
+    values = c(
+      "AI Job Postings" = "blue",
+      "LLM Releases" = "red"
+    )
+  ) +
+
+  scale_y_continuous(
+    name = "AI Job Postings",
+    sec.axis = sec_axis(~ . / 500, name = "LLM Releases")
+  ) +
+
+  labs(
+    x = "Year",
+    title = "AI Job Postings vs LLM Model Releases (2020–2024)"
+  ) +
+
+  theme_bw() +
+  theme(
+    text = element_text(size = 14),
+    plot.title = element_text(face = "bold", size = 18),
+  )
+```
+---
+
+#### **3.3 Conclusion**
+
+From 2020 to 2024, both AI job postings and LLM releases increased strongly.  
+Jobs rose from 75 postings in 2020 to more than 62,000 in 2024, while LLM releases grew from 3 to around 100 in the same period.  
+
+The steep jump in job postings between 2022 and 2024 happens after the sharp rise in LLM releases between 2021 and 2023. This pattern suggests that growth in LLM activity and tools is associated with a later surge in demand for AI workers, although our data cannot prove that LLM releases directly caused the increase in jobs.
+
+
+---
+
+### **4. Research Question 2**
+**Are bigger AI models (more parameters) associated with more LLM releases in certain companies?**
+
+#### **4.1 Summarize average model size per company**
+
+```{r}
+rq2_model_size <- llm_data %>%
+  filter(!is.na(Parameters_num)) %>%        
+  group_by(Company) %>%
+  summarize(
+    avg_parameters = mean(Parameters_num),
+    n_models       = n()
+  ) %>%
+  arrange(desc(avg_parameters))
+
+rq2_model_size
+```
+
+---
+
+#### **4.2 Top 10 companies by average model size**
+
+```{r}
+rq2_top10_size <- rq2_model_size %>%
+  slice_max(order_by = avg_parameters, n = 10)
+
+rq2_top10_size %>%
+  ggplot(aes(
+    x = reorder(Company, avg_parameters),
+    y = avg_parameters,
+    fill = Company
+  )) +
+  geom_col(show.legend = FALSE) +
+  scale_fill_brewer(palette = "Set3") +
+  coord_flip() +
+  labs(
+    x = "Company",
+    y = "Average model size (Parameters_num units)",
+    title = "Top 10 companies by average LLM model size"
+  ) +
+  theme_bw() +
+  theme(
+    legend.position = "none",
+    plot.title = element_text(face = "bold", size = 13.5)
+  )
+```
+
+---
+
+#### **4.3 Top 10 companies by number of LLM releases**
+
+```{r}
+rq2_top10_count <- rq2_model_size %>%
+  slice_max(order_by = n_models, n = 10)
+
+rq2_top10_count %>%
+  ggplot(aes(
+    x = reorder(Company, n_models),
+    y = n_models,
+    fill = Company
+  )) +
+  geom_col(show.legend = FALSE) +
+  scale_fill_brewer(palette = "Set3") +
+  coord_flip() +
+  labs(
+    x = "Company",
+    y = "Number of LLM releases",
+    title = "Top 10 companies by number of LLM releases"
+  ) +
+  theme_bw() +
+  theme(
+    legend.position = "none",
+    plot.title = element_text(face = "bold", size = 13.5)
+  )
+```
+
+---
+
+#### **4.4 Conclusion** 
+
+The results show a clear difference between the companies producing the largest LLMs and those releasing the most models. Meta AI leads by a wide margin in average model size, indicating a strong emphasis on building very large, highly scaled systems. In contrast, Google releases the highest number of LLMs overall, followed by Meta AI and Microsoft, showing a strategy focused on frequent iteration and broader model development. These findings suggest that model size and release volume follow different organizational priorities: some companies focus on pushing the frontier with a few extremely large models, while others invest in producing many models to support diverse applications and research directions.
+
+---
+
+### **5. Research Question 3**
+Which specific AI job titles (Machine Learning Engineer, Data Scientist, AI Engineer, Data Analyst) command the highest average salaries from 2020 to 2025
+
+#### **5.1 Compute average salaries for the four roles** 
+
+```{r}
+job_salaries_clean <- job_salaries %>%
+  mutate(
+    title_lower = str_to_lower(job_title),
+    job_title_clean = case_when(
+      str_detect(title_lower, "machine learning") ~ "Machine Learning Engineer",
+      str_detect(title_lower, "data scientist") |
+        str_detect(title_lower, "data science") ~ "Data Scientist",
+      str_detect(title_lower, "ai engineer") |
+        str_detect(title_lower, "artificial intelligence") |
+        str_detect(title_lower, "ai ") ~ "AI Engineer",
+      str_detect(title_lower, "data analyst") |
+        str_detect(title_lower, "analytics") ~ "Data Analyst",
+      TRUE ~ NA_character_
+    )
+  ) %>%
+  filter(!is.na(job_title_clean))
+
+job_salaries_clean
+```
+---
+
+```{r}
+rq3_salary_yearly <- job_salaries_clean %>%
+  filter(work_year >= 2020, work_year <= 2025) %>%
+  group_by(work_year, job_title_clean) %>%
+  summarize(
+    avg_salary = mean(salary_in_usd, na.rm = TRUE),
+    count = n()
+  ) %>%
+  arrange(work_year)
+
+rq3_salary_yearly
+```
+
+
+#### **5.2 Barplot of average salary by role**
+
+```{r}
+rq3_salary_yearly %>%
+  ggplot(aes(x = work_year,
+             y = avg_salary,
+             color = job_title_clean)) +
+  geom_line(size = 1.2) +
+  geom_point(size = 2) +
+  labs(
+    x = "Year",
+    y = "Average Salary (USD)",
+    color = "Job Title",
+    title = "Average AI Job Salaries by Role (2020–2025)"
+  ) +
+    theme(
+    plot.title = element_text(face = "bold", size = 16)
+  )
+```
+
+---
+
+#### **5.3 Conclusion**
+
+From 2020 to 2025, Machine Learning Engineers consistently earned the highest average salaries, followed by AI Engineers, Data Scientists, and Data Analysts. All four roles showed salary growth after 2022, but Machine Learning Engineer salaries increased the fastest and remained the highest across every year. These results suggest that roles involving deeper model development and engineering tend to command stronger compensation compared to analytical or data-focused positions.
+
+---
+
+### **6. Research Question 4**
+Which countries pay the highest AI salaries, and how do the top countries compare when controlling for the same job role?
+
+---
+
+#### **6.1 Top 10 paying countries**
+
+```{r}
+top_countries <- job_salaries %>%
+  group_by(employee_residence) %>%
+  summarize(
+    avg_salary = mean(salary_in_usd, na.rm = TRUE),
+    n = n()
+  ) %>%
+  filter(n >= 100) %>%             
+  arrange(desc(avg_salary)) %>%
+  slice_head(n = 10) %>%
+  pull(employee_residence)
+
+top_countries
+```
+
+---
+
+#### **6.2 Determine which AI job role appears most frequently across the top 10 countries**
+
+```{r}
+job_salaries %>%
+  filter(employee_residence %in% top_countries) %>%
+  count(job_title, sort = TRUE) %>%
+  slice_head(n = 20)
+```
+
+---
+
+#### **6.3 Compare that same role across the top 10 countries**
+
+```{r}
+rq4_role_country <- job_salaries %>%
+  filter(
+    employee_residence %in% top_countries,
+    str_detect(job_title, "Data Scientist")    
+  ) %>%
+  group_by(employee_residence) %>%
+  summarize(
+    avg_salary = mean(salary_in_usd, na.rm = TRUE),
+    n = n()
+  ) %>%
+  arrange(desc(avg_salary))
+
+rq4_role_country
+```
+
+---
+
+#### **6.4 Plot: Salary comparison of the same role across top countries**
+
+```{r}
+rq4_role_country %>%
+  ggplot(aes(
+    x = reorder(employee_residence, avg_salary),
+    y = avg_salary,
+    fill = employee_residence
+  )) +
+  geom_col() +
+  coord_flip() +
+  labs(
+    x = "Country",
+    y = "Average Salary (USD)",
+    title = "Data Scientist Salary Comparison Across Top 10 Highest Paying Countries"
+  ) +
+  scale_fill_brewer(palette = "Set3") +
+  theme_bw() +
+  theme(
+    legend.position = "none",
+    plot.title = element_text(face = "bold", size = 13.5),
+  )
+
+```
+
+---
+
+#### **6.5 Conclusion**
+
+Across the top ten highest paying countries for Data Scientists, the United States consistently offers the highest average salary, followed by Mexico and Canada. The remaining countries show a noticeable decline compared to these top three. This indicates that job location has a strong influence on compensation, even when the job title is held constant. While role type matters in salary outcomes, geographic differences appear to play an even larger role in determining pay levels for Data Scientists.
+
+---

@@ -1,7 +1,6 @@
 ---
-title: "INFO 201 Final Project Group 2"
+title: "INFO 201 Final Project - Section BE Group 2"
 author: "Joseph Chamdani, Winson Teh, Kenneth Wu, Hanjun Ma"
-date: "2025-11-21"
 output: html_document
 ---
 
@@ -130,7 +129,6 @@ This study focuses on four research questions :
 ---
 
 ### **5.2 Merging and Filtering**
-To answer the research questions, different filtering and preparation steps were applied to each dataset:
 
 ---
 

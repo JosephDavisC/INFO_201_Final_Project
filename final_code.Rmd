@@ -1,7 +1,6 @@
 ---
-title: "INFO 201 Final Project Group 2 - Code"
+title: "INFO 201 Final Project Section BE Group 2 - Code"
 author: "Joseph Chamdani, Winson Teh, Kenneth Wu, Hanjun Ma"
-date: "2025-11-21"
 output: html_document
 ---
 

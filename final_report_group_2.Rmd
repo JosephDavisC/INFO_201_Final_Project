@@ -272,19 +272,31 @@ Across the top ten highest paying countries for Data Scientists, the United Stat
 
 ---
 
-**Collective Discussion**
-
-Our analysis reveals clear relationships between the rapid growth of large language models and trends in the AI job market. The sharp increase in LLM releases between 2021 and 2023 aligns closely with the surge in AI job postings between 2022 and 2024. This pattern suggests that advancements in AI technology, particularly the release of new foundation models, are associated with rising workforce demand. While we cannot claim direct causality, the timing strongly indicates that the expansion of model capabilities drives companies to hire more engineers, analysts, and researchers who can apply, integrate, or maintain these systems.
-
-Across companies, we found that the organizations releasing the largest models are not necessarily the ones releasing the most. Meta AI consistently produced the biggest models on average, while Google, Microsoft, and Meta led in total number of releases. This indicates that companies differ in strategic emphasis: some prioritize innovation through scale, while others prioritize iteration and volume. These differences reflect broader industry approaches to competitiveness in AI development.
-
-Salary trends further highlight how the job market responds to technical shifts. Machine Learning Engineers and AI Engineers consistently earned the highest salaries from 2020 to 2025, especially after 2022, when interest in large model deployment increased. Data Scientists and Data Analysts also experienced salary growth, but their increases were more moderate. This suggests that roles closest to model architecture, optimization, and application command the strongest compensation as organizations accelerate adoption of AI systems.
-
-Finally, our cross country analysis demonstrates that geographic factors strongly influence salary outcomes. Even when job titles are held constant, the United States maintains a significant salary advantage, followed by Mexico and Canada. This variation suggests that local economic conditions, labor markets, and industry presence shape compensation more heavily than job title alone.
+#### **Collective Discussion**
 
 ---
 
-**Limitations of the Data**
+**RQ1 — Relationship between LLM releases and AI job growth** 
+
+Our analysis reveals clear relationships between the rapid growth of large language models and trends in the AI job market. The sharp increase in LLM releases between 2021 and 2023 aligns closely with the surge in AI job postings between 2022 and 2024. This timing suggests that advancements in AI technology, particularly the release of new foundation models, are associated with rising workforce demand. While we cannot claim direct causality, the alignment strongly indicates that the expansion of model capabilities drives companies to hire more engineers, analysts, and researchers to build, integrate, and maintain these systems.
+
+**RQ2 — Model size vs number of LLM releases across companies**
+
+Our results show that the companies producing the largest models are not the ones releasing the most models. Meta AI stands out by a wide margin with the largest average LLM model size, while Google leads in total LLM releases, followed by Meta AI and Microsoft. This contrast suggests that organizations follow different strategic priorities in their AI development: some, like Meta AI, invest heavily in a few extremely large, cutting-edge models, while others, such as Google and Microsoft, focus on releasing many models across diverse applications and research areas. These differences illustrate how companies balance scale versus volume in their approach to AI innovation.
+
+**RQ3 — Salary differences across AI job titles**
+
+Salary patterns further demonstrate how the AI job market responds to technical demands. Machine Learning Engineers and AI Engineers consistently earned the highest salaries from 2020 to 2025, especially after 2022 when demand for large-scale model development increased. Data Scientists and Data Analysts also experienced salary growth, but their increases were more moderate. This suggests that roles requiring deeper involvement in model optimization, engineering, and deployment command higher compensation compared to analytical or data-focused positions.
+
+**RQ4 — Geographic differences in AI salary levels**
+
+Our cross-country comparison shows that geographic factors play a strong role in shaping compensation. Even when job titles are held constant, the United States maintains a significant salary advantage for Data Scientists, followed by Mexico and Canada. One formal explanation for this pattern is that these three countries have strong cross-border technology integration, with many U.S.-based AI companies operating or expanding into Canada and Mexico. This creates a tightly connected regional market with high demand for AI talent, contributing to elevated salary levels across all three countries. These findings show that local economic conditions, labor markets, and industry presence influence AI salary outcomes more than job title alone.
+
+---
+
+#### **Limitations of the Data**
+
+---
 
 Despite the meaningful patterns identified, several limitations must be acknowledged. First, our datasets cover different time spans. The LLM dataset includes releases from 2018 to 2024, while the job salary dataset spans 2020 to 2025. This overlap allows comparison, but not all events align perfectly in time, which limits long term causal interpretation.
 
@@ -296,7 +308,9 @@ Finally, aggregation steps such as averaging salaries by year, country, and job 
 
 ---
 
-**Further Research Directions**
+#### **Further Research Directions**
+
+---
 
 Future research could expand on our findings by incorporating additional external datasets, such as LinkedIn hiring trends, company financial reports, or global AI investment patterns. These could provide a clearer understanding of how economic conditions or venture capital flows influence job demand.
 

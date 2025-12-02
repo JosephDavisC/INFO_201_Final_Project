@@ -6,6 +6,10 @@ output: html_document
 
 ---
 
+<p align="center">
+  <img src="Media/AI_Job_Market_&_LLM_Growth.png" width="60%">
+</p>
+
 ## **1. Abstract**
 
 ---

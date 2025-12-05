@@ -734,4 +734,3 @@ Overall, our findings highlight the strong connection between technological prog
 Our analysis provides students, advisors, and early career professionals with a clearer understanding of which skills and roles are most valued in today’s AI driven economy. By recognizing how LLM innovation, company behavior, and geographic factors influence salary and hiring trends, individuals and organizations can better navigate the rapidly expanding AI workforce landscape.
 
 ---
-

@@ -259,8 +259,7 @@ This project is licensed under the **Apache License 2.0** - see the [LICENSE](LI
 
 - **Data Sources:** Kaggle community for providing public datasets
 - **Course:** INFO 201 - Information Technology and Society, University of Washington
-- **Instructor:** [Course instructor acknowledgment]
-- **Tools:** R Core Team and tidyverse developers
+- **Instructor:** Ott Toomet
 
 ---
 

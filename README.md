@@ -26,10 +26,10 @@ This research project examines the relationship between **Large Language Model (
 
 This analysis addresses four key questions:
 
-1. **Market Correlation:** How does the growth in LLM releases relate to AI job postings from 2020 to 2024?
-2. **Role Hierarchy:** Which AI job roles earn the highest salaries, and how have these evolved from 2020 to 2025?
-3. **Corporate Strategy:** Which companies produce the largest LLMs, and which release the most models?
-4. **Geographic Variation:** Which countries offer the highest AI salaries when controlling for job role?
+1. **Market Correlation:** How does the growth in LLM releases from 2020 to 2024 correlate with the number of AI related job postings during the same period?
+2. **Role Hierarchy:** Are bigger AI models associated with more LLM releases in certain companies?
+3. **Corporate Strategy:** Which specific AI job titles have the highest average salaries from 2020 to 2025?
+4. **Geographic Variation:** Which countries pay the highest AI salaries, and how do the top countries compare when controlling for the same job role?
 
 ---
 

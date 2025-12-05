@@ -18,7 +18,7 @@ This research project examines the relationship between **Large Language Model (
 - [Kenneth Wu](https://github.com/kennethwu30)
 - [Hanjun Ma](https://github.com/decade3601)
 
-**Course:** INFO 201 - Information Technology and Society, University of Washington
+**Course:** INFO 201 -  Intro to data programming, University of Washington
 
 ---
 

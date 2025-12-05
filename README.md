@@ -66,6 +66,13 @@ INFO_201/
 
 ## Getting Started
 
+### Quick Preview
+
+**View the live report without running any code:**
+[**📊 View Final Report Online**](https://uw.joechamdani.com/projects/INFO_201/final_report_group_2)
+
+---
+
 ### Prerequisites
 
 - **R** (version 4.0 or higher)

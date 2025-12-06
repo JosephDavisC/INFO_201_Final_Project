@@ -10,6 +10,7 @@
 # Knitted output
 *.html
 *.pdf
+!INFO_201_Project_Presentation.pdf
 *.docx
 
 # Cache folders for knitr

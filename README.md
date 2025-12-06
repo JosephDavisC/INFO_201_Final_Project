@@ -69,7 +69,8 @@ INFO_201/
 ### Quick Preview
 
 **View the live report without running any code:**
-[**📊 View Final Report Online**](https://uw.joechamdani.com/projects/INFO_201/final_report_group_2)
+- [**View Final Report Online**](https://uw.joechamdani.com/projects/INFO_201/final_report_group_2)
+- [**View Project Presentation (PDF)**](INFO_201_Project_Presentation.pdf)
 
 ---
 
@@ -143,54 +144,35 @@ INFO_201/
 
 ## Key Findings
 
-### 1. Strong Correlation Between LLM Development and Job Growth
+### 1. AI Job Postings vs LLM Releases (2020-2024)
 
 ![Job Postings vs LLM Releases](Graphs/RQ1.png)
 
-AI job postings experienced exponential growth from **75 postings in 2020** to over **62,000 in 2024**—an **800x increase**. This surge closely tracks the acceleration of LLM releases, which grew from 3 models in 2020 to approximately 100 in 2024. The correlation suggests that LLM advancement is a significant driver of AI employment demand.
-
-**Key Insight:** The post-2022 acceleration aligns with the release of ChatGPT and other publicly accessible LLMs, indicating that consumer-facing AI applications dramatically impact labor markets.
+From 2020 to 2024, both AI job postings and LLM releases increased rapidly. Job postings rose from 75 in 2020 to over 62,000 in 2024, while LLM releases grew from 3 to nearly 100 during the same period. The steep jump in job postings after 2022 aligns closely with the surge in model releases, suggesting that growth in LLM development is strongly associated with rising demand for AI workers.
 
 ---
 
-### 2. Salary Hierarchy Among AI Roles
-
-![Salary by Job Role](Graphs/RQ3.png)
-
-Analysis of 151,445 job postings reveals a consistent salary hierarchy:
-
-1. **Machine Learning Engineers** - Highest average salaries across all years
-2. **AI Engineers** - Second-highest compensation
-3. **Data Scientists** - Mid-range salaries with strong growth
-4. **Data Analysts** - Entry-level compensation tier
-
-**Key Insight:** All roles show salary increases post-2022, with Machine Learning Engineers maintaining a 20-30% premium over other positions. This suggests specialization in model development commands significant market value.
-
----
-
-### 3. Divergent Corporate Strategies in LLM Development
+### 2. Largest Models vs Most Releases
 
 ![Companies by Model Size](Graphs/RQ2_LLM_Model.png) | ![Companies by Release Frequency](Graphs/RQ2_LLM_Release.png)
 
-**Scale vs. Volume:**
-- **Meta AI** produces the largest models by parameter count (scale-focused strategy)
-- **Google** releases the most models overall (volume-focused strategy)
-
-**Key Insight:** Top companies pursue different innovation strategies—some prioritize breakthrough capabilities through massive models, while others emphasize rapid iteration and diverse applications. Neither approach dominates the top-10 rankings for both metrics, indicating multiple viable paths to market leadership.
+Companies releasing the biggest models are not the ones releasing the most models. Meta AI produces the largest models, but Google, Meta AI, and Microsoft dominate in release count. This indicates that producing bigger models does not necessarily correlate with releasing more models. Some companies prioritize size, while others prioritize volume.
 
 ---
 
-### 4. Geographic Salary Disparities
+### 3. AI Job Salaries by Role (2020-2025)
+
+![Salary by Job Role](Graphs/RQ3.png)
+
+From 2020 to 2025, Machine Learning Engineers earned the highest average salaries every year. AI Engineers ranked second, followed by Data Scientists and Data Analysts. The sharp increases starting in 2022 suggest that high demand for engineering focused roles corresponds with rising salary levels.
+
+---
+
+### 4. Country Differences in AI Salaries
 
 ![Salary by Country](Graphs/RQ4.png)
 
-Controlling for job role (Data Scientists), the top-paying countries are:
-
-1. **United States** - Highest average salaries
-2. **Mexico** - Second-highest (unexpected finding)
-3. **Canada** - Third-highest
-
-**Key Insight:** The United States offers 20-40% higher salaries than other top-10 countries for equivalent roles. The strong performance of Mexico and Canada suggests North American tech integration and potentially lower cost-of-living adjustments attracting talent.
+Across the top ten highest paying countries for Data Scientists, the United States consistently offers the highest salaries, with Mexico and Canada just behind. One possible explanation is that these three countries share strong cross-border technology integration, with many US-based AI companies operating or expanding into Canada and Mexico. This creates a closely connected regional market with high demand for AI talent, which helps keep salary levels elevated across all three countries.
 
 ---
 
@@ -204,7 +186,7 @@ Controlling for job role (Data Scientists), the top-paying countries are:
    - Filtered for complete records (removed rows with missing salary or year data)
 
 2. **LLM Dataset:**
-   - Normalized company names (consolidated Google variants: "Google", "Google AI", "Google DeepMind" → "Google")
+   - Normalized company names (consolidated Google variants: "Google", "Google AI", "Google DeepMind" to "Google")
    - Cleaned parameter values (removed non-numeric characters)
    - Extracted year from release date strings
 
@@ -265,7 +247,7 @@ This project is licensed under the **Apache License 2.0** - see the [LICENSE](LI
 ## Acknowledgments
 
 - **Data Sources:** Kaggle community for providing public datasets
-- **Course:** INFO 201 - Information Technology and Society, University of Washington
+- **Course:** INFO 201 - Intro to data programming, University of Washington
 - **Instructor:** Ott Toomet
 
 ---
